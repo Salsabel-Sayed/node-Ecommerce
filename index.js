@@ -9,13 +9,17 @@ import Stripe from 'stripe';
 const stripe = new Stripe('sk_test_51Pl5iHEYCGyae2RjXyrJgvfmVMud1o8GOmoE7UwfODvc0SzwTPWMpZ4Q5Lmh9Xj35jMItglZB0SWcLmPDiXvsuJ000VviDAMoQ');
 
 import dotenv from "dotenv"
+import { Orders } from './modules/order/order.model.js';
+import { User } from './modules/users/users.model.js';
+import { Cart } from './modules/cart/cart.model.js';
+import { Product } from './modules/products/products.model.js';
 dotenv.config()
 
 // import "dotenv/config"
 const app = express()
 const port =process.env.PORT || 3000
 
-app.post('/api/webhook', express.raw({type: 'application/json'}), catchError((req, res) => {
+app.post('/api/webhook', express.raw({type: 'application/json'}), catchError(async(req, res) => {
     const sig = req.headers['stripe-signature'].toString()
   
      let event = stripe.webhooks.constructEvent(req.body, sig, "whsec_iv60u28o7HMW1rkaSxRviH5ynpOiRIuO");
@@ -23,7 +27,32 @@ app.post('/api/webhook', express.raw({type: 'application/json'}), catchError((re
   let checkout;
     // Handle the event
     if(event.type == "checkout.session.completed"){
-        checkout =event.data.object
+        checkout =event.data.object;
+
+        let user = await User.findOne({email:checkout.customer_email})
+        let cart = await Cart.findById(checkout.client_reference_id)
+    if(!cart) return next(new appError('cart not found',404))
+    let order = new Orders({
+        userRef:user._id,
+        orderItem:cart.cartItem,
+        shippingAdress:checkout.metadata,
+        totalOrderPrice:checkout.amount_total/100,
+        paymentType: 'card',
+        isPaid: true
+
+    })
+    await order.save()
+    let options = cart.cartItem.map((prod) => {
+        return ( {
+            updateOne:{
+                'filter':{_id:prod.product},
+                "update":{$inc:{sold:prod.quantity,stoke:-prod.quantity}}
+            }
+        })
+    })
+    await Product.bulkWrite(options)
+    await Cart.findByIdAndDelete(cart._id)
+
     }
     res.json({message:"success",checkout});
   }));
