@@ -1,7 +1,8 @@
 import { Router } from "express";
 
-import { allowedTo, protectedRoute } from '../../middleWare/auth/auth.controller.js';
+import { allowedTo } from '../../middleWare/auth/auth.controller.js';
 import { createCashOrder, createCheckoutSession, getAllOrders, getUserOrder } from "./order.controller.js";
+import { protectedRoute } from "../../middleWare/protectedRoute.js";
 
 
 

@@ -38,13 +38,16 @@ export const getCategories = getSpecfic(Category)
 export const updateCategories = catchError(async(req,res,next)=>{
     req.body.slug = slugify(req.body.name)
     if(req.body.slug)req.body.slug = slugify(req.body.name)
+    console.log(req.file)
     if(req.file)req.body.image = req.file.filename
     
     const __dirname = fileURLToPath(import.meta.url) 
     
 
-    let category = await Category.findByIdAndUpdate(req.params.id , req.body , {new:true})
-    const oldImagePath = path.join(__dirname,`../../../../../Node.js/mutiisAssignments/E-commerce/uploads/categories/${category.image}`);  
+    let category = await Category.findByIdAndUpdate(req.params.id , req.body )
+    const fileName = category.image.split('categories/')[1]
+    console.log(fileName)
+    const oldImagePath = path.join(__dirname,`../../../uploads/categories/${fileName}`);  
     console.log("oldImagePath:", oldImagePath);
     
     if (fs.existsSync(oldImagePath)) {  

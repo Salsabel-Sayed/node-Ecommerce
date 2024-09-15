@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { addCoupon, deleteCoupon, getAllCoupon, getCoupon, updateCoupon } from "./coupons.controller.js";
-import { allowedTo, protectedRoute } from './../../middleWare/auth/auth.controller.js';
+import { allowedTo } from './../../middleWare/auth/auth.controller.js';
+import { protectedRoute } from "../../middleWare/protectedRoute.js";
 
 
 

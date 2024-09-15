@@ -5,20 +5,11 @@ import { catchError } from './../../middleWare/errorHandling/catchError.js';
 import { deleteOne, getSpecfic } from "../handler/handler.js";
 import { ApiFeatures } from "../../utils/apiFeatures.js";
 import { User } from "./users.model.js";
+import { nanoid } from "nanoid";
+import {sendEmail } from "../../utils/sendEmail.js";
 
 
-// * add user
 
-export const addUser = catchError(async(req,res,next)=>{
-
-    
-    let user = new User(req.body)
-    await user.save()
-
-    res.json({message:"added",user})
-})
-
-// ? ////////////////////////////////////////////////////////////////////////////////////////////////
 // * get All users
 
 export const getAllUser = catchError(async(req,res,next)=>{
@@ -54,6 +45,22 @@ export const updateAllUsers = catchError(async(req,res,next)=>{
 })
 // ? ////////////////////////////////////////////////////////////////////////////////////////////////
 // * delete User
-
-
 export const deleteUser =deleteOne(User)
+
+// ? ////////////////////////////////////////////////////////////////////////////////////////////////
+// * otp msg to email
+export const otpRequest = catchError(async(req,res,next)=>{
+    const otp = nanoid(6)
+    const user = await User.findOneAndUpdate({email:req.body.email},{otp})
+    const html1 = html(otp)
+    sendEmail({to:user.email,subject:"otp",html:html1})
+    return res.json("check email")
+})
+
+export const checkOtp = catchError(async(req,res,next)=>{
+    const user = await User.findOne({email:req.body.email,otp:req.body.otp})
+    if(!user){
+        return res.json("invalid otp")
+    }
+    await User.updateOne({email:req.body.email},{})
+})

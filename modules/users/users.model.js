@@ -17,6 +17,11 @@ const userSchema = new Schema({
         type:String,
         required:true,
     },
+    phone:{
+        type:String,
+        required: true,
+        unique:true
+    },
     role:{
         type:String,
         enum:['user','admin','mgr']
@@ -42,7 +47,9 @@ const userSchema = new Schema({
         city:String,
         phone:String,
         street:String
-    }]
+    }],
+    otp: String,
+    // otpExpires:Date
     
 })
 userSchema.pre('save',function(){

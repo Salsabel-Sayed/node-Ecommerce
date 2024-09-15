@@ -1,7 +1,8 @@
 import { Router } from "express";
 
-import { allowedTo, protectedRoute } from "../../middleWare/auth/auth.controller.js";
+import { allowedTo } from "../../middleWare/auth/auth.controller.js";
 import { addToadresses, getAlladresses, removeAdresses } from "./adress.controller.js";
+import { protectedRoute } from "../../middleWare/protectedRoute.js";
 
 
 

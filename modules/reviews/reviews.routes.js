@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { addReviews, deleteReview, getAllReviews, getreview, updateReview } from "./reviews.conrtoller.js";
-import { allowedTo, protectedRoute } from "../../middleWare/auth/auth.controller.js";
+import { allowedTo } from "../../middleWare/auth/auth.controller.js";
+import { protectedRoute } from "../../middleWare/protectedRoute.js";
 
 
 
