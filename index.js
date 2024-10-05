@@ -1,3 +1,6 @@
+process.on('uncaughtException', (err) => {
+    console.log('error in code', err);
+})
 import express from 'express';
 import {dbConnect} from "./dataBase/dbConnection.js"
 import {appError} from "./middleWare/errorHandling/appError.js"
@@ -58,7 +61,7 @@ app.post('/api/webhook', express.raw({type: 'application/json'}), catchError(asy
   }));
 app.use(cors())
 app.use(express.json())
-app.use('/uploads',express.static('uploads'))
+// app.use('/uploads',express.static('uploads'))
 
 bootstrap(app)
 app.use('*',(req,res,next)=>{

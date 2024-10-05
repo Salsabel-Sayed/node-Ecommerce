@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-import { allowedTo } from './../../middleWare/auth/auth.controller.js';
 import { addCart, applyCoupon, clearCart, getLoggedUserCart, removeItemFromCart, updateCart } from "./cart.controller.js";
 import { protectedRoute } from "../../middleWare/protectedRoute.js";
+import { allowedTo } from "../../middleWare/validations/allowRoles.js";
 
 
 

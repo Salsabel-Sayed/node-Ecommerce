@@ -207,7 +207,7 @@ export const deleteUser = catchError(async (req, res, next) => {
 
 
 // ? ////////////////////////////////////////////////////////////////////////////////////
-// * get user
+// * get user profile
 
 export const getUser = catchError(async (req, res, next) => {
     const admin = await User.findOne({ _id: req.user.userId });
@@ -217,15 +217,6 @@ export const getUser = catchError(async (req, res, next) => {
 });
 
 
-
-
 // ? ////////////////////////////////////////////////////////////////////////////////////
-// * allow specific user role
- export const allowedTo = (...roles)=>{
-    
-    return catchError(async(req,res,next)=>{
-        if(roles.includes(req.user.role))
-            return next()
-        return next(new appError('you dont have permission to perform this endpoint',401))
-})}
+
 

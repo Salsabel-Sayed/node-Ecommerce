@@ -21,7 +21,7 @@ authRouter.get("/requestUpdatePassword/", protectedRoute, requestUpdatePassword)
 authRouter.put("/updatePassword/", protectedRoute, updatePassword);
 authRouter.put("/updateUser/", verifyToken, updateUser);
 authRouter.delete("/deleteUser/", verifyToken, deleteUser);
-authRouter.get("/getUser/", verifyToken, getUser);
+// authRouter.get("/getUser/", verifyToken, getUser);
 // authRouter.patch("/protectedRoute/",protectedRoute)
 
 export default authRouter

@@ -7,44 +7,88 @@ import { ApiFeatures } from "../../utils/apiFeatures.js";
 import { User } from "./users.model.js";
 import { nanoid } from "nanoid";
 import {sendEmail } from "../../utils/sendEmail.js";
+import  bcrypt  from 'bcrypt';
+import  jwt  from 'jsonwebtoken';
+
+
+// * add admin account
+export const addAdmin = catchError(async (req, res, next) => {
+    const ownerId = req.user._id
+    console.log("ownerId", ownerId);
+    
+    const { name, email, password,phone } = req.body
+    const findOwnerId = await User.findById(ownerId)
+    console.log("findOwnerId", findOwnerId._id.toString());
+    if (!findOwnerId) return next(new appError("u r not owner"))
+    if (findOwnerId.role === "owner" && ownerId === findOwnerId._id.toString()){
+        const hashPass = await bcrypt.hash(password, 3)
+        const admin = await User.create({ name, email, password: hashPass, phone,role: "admin" })
+        const token = jwt.sign({
+            _id: admin.id,
+            role: admin.role,
+            email: admin.email,
+            password: admin.password,
+            isActive: admin.isActive
+        }, "ecommerceforbackandfront")
+        res.status(201).json({ message: "admin created", admin, token })
+    }
+})
+    
 
 
 
-// * get All users
+// ? ////////////////////////////////////////////////////////////////////////////////////////////////
+// * get All users (admin)
 
 export const getAllUser = catchError(async(req,res,next)=>{
-    let apiFeatures = new ApiFeatures(User.find(), req.query).pagination().fields().filter().search().sort()
-    let user = await apiFeatures.dbQuery
-    user|| next(new appError('user not found', 404))
-    !user||  res.json({message:"get all",searching:apiFeatures.searchQuery,user})
+    const adminId = req.user._id
+    const findAdmin = await User.findById(adminId)
+    if (!findAdmin) return next(new appError("cant found admin",404))
+        if(findAdmin.role !== "admin") return next(new appError("u r not admin !",404))
+            if(findAdmin.role === "admin"){
+                let apiFeatures = new ApiFeatures(User.find(), req.query).pagination().fields().filter().search().sort()
+
+                let user = await apiFeatures.dbQuery
+                user || next(new appError('user not found', 404))
+                !user || res.json({ message: "get all", searching: apiFeatures.searchQuery, user })
+            }
 })
 // ? ////////////////////////////////////////////////////////////////////////////////////////////////
-// * get user
+// * get user(admin)
 export const getUser = getSpecfic(User)
 // ? ////////////////////////////////////////////////////////////////////////////////////////////////
-// * update user
+// * update user(admin)
 
 
 export const updateUser = catchError(async(req,res,next)=>{
-    let user = await User.findByIdAndUpdate(req.params.id , req.body , {new:true})
-
-    user || next(new appError('user not found', 404))
-    !user ||  res.json({message:"updated",user})
+    const adminId = req.user._id
+    const findAdmin = await User.findById(adminId)
+    if (!findAdmin) return next(new appError("cant found admin", 404))
+    if (findAdmin.role !== "admin") return next(new appError("u r not admin !", 404))
+    if (findAdmin.role === "admin") {
+        let updatedUser = await User.findByIdAndUpdate(req.params.id, req.body ,{new:true})
+        updatedUser || next(new appError('updatedUser not found', 404))
+        !updatedUser || res.json({ message: "deleted", updatedUser })
+    }
 })
 
 // ? ////////////////////////////////////////////////////////////////////////////////////////////////
-// * update all user
+// * update all users(admin)
 
 
 export const updateAllUsers = catchError(async(req,res,next)=>{
-   
-    let user = await User.updateMany({}, { $set: { confirmEmail: false } })
+    const adminId = req.user._id
+    const findAdmin = await User.findById(adminId)
+    if (!findAdmin) return next(new appError("cant found admin", 404))
+    if (findAdmin.role !== "admin") return next(new appError("u r not admin !", 404))
+    if (findAdmin.role === "admin") {
+        let updateMayUsers = await User.updateMany({},req.body)
+        updateMayUsers || next(new appError('updateMayUsers not found', 404))
+        !updateMayUsers || res.json({ message: "updated", updateMayUsers}) 
+}})
 
-    user || next(new appError('user not found', 404))
-    !user ||  res.json({message:"updated",user})
-})
 // ? ////////////////////////////////////////////////////////////////////////////////////////////////
-// * delete User
+// * delete User(admin)
 export const deleteUser =deleteOne(User)
 
 // ? ////////////////////////////////////////////////////////////////////////////////////////////////

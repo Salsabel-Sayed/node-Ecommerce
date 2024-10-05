@@ -2,7 +2,7 @@ import { model, Schema, Types } from "mongoose";
 
 
 const productSchema = new Schema({
-title: {
+productTitle: {
     type: String,
     unique: [true, "name is required"],
     trim: true,
@@ -11,16 +11,20 @@ title: {
 },
 slug:{
     type: String,
-    lowerCase:true,
-    required:true,
     unique: [true, "name is required"],
 },
-images:[String],
+    images: [{
+        secure_url: { type: String, required: true },
+        public_id: { type: String, required: true }
+    }],
 createdBy:{
     type:Types.ObjectId,
     ref:"User"
 },
-imageCover:String,
+    imageCover: {
+        secure_url: { type: String, required: true },
+        public_id: { type: String, required: true }
+    },
 createdBy:{
     type:Types.ObjectId,
     ref:"User"

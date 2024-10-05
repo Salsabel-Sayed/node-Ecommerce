@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { addToWishlist, getAllWishlist, removeFromWishlist } from "./wishlist.controller.js";
-import { allowedTo } from "../../middleWare/auth/auth.controller.js";
+
 import { protectedRoute } from "../../middleWare/protectedRoute.js";
+import { allowedTo } from "../../middleWare/validations/allowRoles.js";
 
 
 
