@@ -2,8 +2,10 @@ import adminSubCategoryRouter from "../modules(admin)/adminSubCategories/adminSu
 import subCategoryRouter from "./subCategories(user)/subCategories.routes.js"
 import adminBrandRouter from "../modules(admin)/adminBrands/adminBrands.routes.js";
 import brandRouter from "./brands(user)/brands.routes.js";
-import adminProductRouter from "./products/products.routes.js";
+
 import adminCategoryRouter from "../modules(admin)/adminCategories/adminCategory.routes.js";
+import adminProductRouter from "../modules(admin)/products/adminProducts.routes.js";
+
 
 
 
@@ -19,6 +21,7 @@ export const bootstrap = (app)=>{
     app.use('/api/brand/', brandRouter)
     app.use('/api/admin/brand/', adminBrandRouter)
     app.use('/api/admin/products/', adminProductRouter)
+
 
     // app.use('/api/coupon/', brandRouter)
     // app.use('/api/users/', userRouter)

@@ -1,8 +1,9 @@
 import { model, Schema, Types } from "mongoose";
+import slugify from "slugify";
 
 
 const productSchema = new Schema({
-productTitle: {
+    productName: {
     type: String,
     unique: [true, "name is required"],
     trim: true,
@@ -17,11 +18,7 @@ slug:{
         secure_url: { type: String, required: true },
         public_id: { type: String, required: true }
     }],
-createdBy:{
-    type:Types.ObjectId,
-    ref:"User"
-},
-    imageCover: {
+    coverImage: {
         secure_url: { type: String, required: true },
         public_id: { type: String, required: true }
     },
@@ -61,10 +58,14 @@ productSchema.virtual('myReviews', {
   productSchema.pre('findOne', function(){
     this.populate('myReviews')
 })
-productSchema.post('init', function(doc){
-    if(doc.imageCover)doc.imageCover = process.env.BASE_URL +'products/' + doc.imageCover
-    if( doc.images)doc.images = doc.images.map(img => process.env.BASE_URL + 'products/' + img)
-})
+
+productSchema.pre('save', function (next) {
+    if (this.productName) {
+        console.log("Generating slug from:", this.productName);
+        this.slug = slugify(this.productName); // Generate slug  
+    }
+    next();
+});
 
 
 export const Product = model('Product',productSchema)

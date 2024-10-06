@@ -15,7 +15,7 @@ import dotenv from "dotenv"
 import { Orders } from './modules/order/order.model.js';
 import { User } from './modules/users/users.model.js';
 import { Cart } from './modules/cart/cart.model.js';
-import { Product } from './modules/products/products.model.js';
+import { Product } from './modules/products(user)/products.model.js';
 dotenv.config()
 
 // import "dotenv/config"

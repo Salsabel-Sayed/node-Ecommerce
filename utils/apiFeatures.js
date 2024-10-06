@@ -58,20 +58,46 @@ export class ApiFeatures {
     
     return this
   }
-
+  // * search
   search(){
-     // * search
-  if (this.searchQuery.search) {
-    this.dbQuery.find(
+    if (this.searchQuery.search) {
+      this.dbQuery.find(
         {
-            $or:[
-                {title: { $regex: this.searchQuery.search, $options: "i" }},
-                {discription: { $regex: this.searchQuery.search, $options: "i" }}
-            ]
-    });
+          $or: [
+            { title: { $regex: this.searchQuery.search, $options: "i" } },
+            { slug: { $regex: this.searchQuery.search, $options: "i" } },
+            { discription: { $regex: this.searchQuery.search, $options: "i" } }
+          ]
+        });
 
-    this.searchQuery = this.searchQuery
-  }
-  return this
+      this.searchQuery = this.searchQuery
+    }
+    return this  
+     
+  
   }
 }
+
+// search(modelName){
+//   const searchableFields = {
+//     Brand: ['brandName', 'slug', 'description'],
+//     Category: ['categoryName', 'slug', 'description'],
+//     // Other models can be specified here  
+//   };
+
+//   const fieldsToSearch = searchableFields[modelName] || [];
+//   console.log("fieldsToSearch", fieldsToSearch);
+
+
+//   if (this.searchQuery.search) {
+//     const searchCriteria = {
+//       $or: fieldsToSearch.map(field => ({ [field]: { $regex: this.searchQuery.search, $options: "i" } }))
+//     };
+
+//     this.dbQuery.find(searchCriteria);
+//   }
+//   return this;
+
+
+// }
+
