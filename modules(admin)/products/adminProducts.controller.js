@@ -9,7 +9,17 @@ import { Product } from './../../modules/products(user)/products.model.js';
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmVlOTU5MWRkOTFjZWE3YjgxNWMzOGYiLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQwNCRLemlERGVWTVlpVDhZWTBmeHlGMjJleUdpNXI1N0lFb1JqOUJWOENWSEMvT2ZKQ3lUM2ZBdSIsImlzQWN0aXZlIjpmYWxzZSwiaWF0IjoxNzI2OTExODg5fQ.B9nI0ge-LFW7HlzMCSENOtWzQfRBBGMuEkc4c-0O6VU
 // * add product
 export const addProduct = catchError(async (req, res, next) => {
-  const { productName } = req.body;
+  const { productName,
+    description, // Make sure to specify all your body variables  
+    price,
+    priceAfterDiscount,
+    brandIdRef,
+    categoryIdRef,
+    subCategoryIdRef,
+    rateCount,
+    rateAvg,
+    stock,   
+    sold } = req.body;
 
   if (!productName || typeof productName !== 'string') {
     return next(new appError("Valid Product name is required", 400));
@@ -58,8 +68,18 @@ export const addProduct = catchError(async (req, res, next) => {
       secure_url: coverImageResponse.secure_url,
       public_id: coverImageResponse.public_id
     },
-    images: additionalImages, // Store array of additional images
-    createdBy: req.user._id
+    images: additionalImages, 
+    createdBy: req.user._id,
+    description,  
+    price,   
+    priceAfterDiscount,  
+    brandIdRef,  
+    categoryIdRef,  
+    subCategoryIdRef, 
+    rateCount, 
+    rateAvg,  
+    stock, 
+    sold,
   });
 
   const savedProduct = await newProduct.save();

@@ -1,8 +1,8 @@
 import { connect } from "mongoose";
-import { User } from "../modules/users/users.model.js";
+
 import bcrypt from "bcrypt"
-import { catchError } from "../middleWare/errorHandling/catchError.js";
 import jwt  from 'jsonwebtoken';
+import { User } from "../modules(admin)/users(admin)/users.model.js";
 
 
 

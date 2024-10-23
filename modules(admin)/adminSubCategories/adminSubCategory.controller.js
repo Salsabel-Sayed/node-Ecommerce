@@ -3,6 +3,8 @@ import { catchError } from "../../middleWare/errorHandling/catchError.js";
 import { appError } from "../../middleWare/errorHandling/appError.js";
 import {adminDeleteOne, adminGetSpecfic } from './../../modules/handler/adminHandler.js';
 import { SubCategory } from "../../modules/subCategories(user)/subCategories.model.js";
+import cloudinary from "../../utils/cloudinary.js";
+import { ApiFeatures } from "../../utils/apiFeatures.js";
 
 
 
@@ -15,28 +17,49 @@ import { SubCategory } from "../../modules/subCategories(user)/subCategories.mod
 // * add subCategories
 
 export const adminAddSubCategory = catchError(async (req, res, next) => {
-    // const { categoryName } = req.body;
-    req.body.slug = slugify(req.body.subCategoryName)
+    const { subCategoryName } = req.body;
+    console.log("subCategoryName", subCategoryName);
+    
 
+    // Validate subCategoryName  
+    if (!subCategoryName || typeof subCategoryName !== 'string') {
+        return next(new appError("Valid subCategory name is required", 400));
+    }
+
+    // Upload image to Cloudinary  
     const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
-        folder: "categoryImages/userResume",
+        folder: "subCategoryImages/image",
     }).catch((err) => {
-        console.log("Cloudinary upload error:", err); // Better logging  
+        console.log("Cloudinary upload error:", err);
         return null;
     });
-    const { secure_url, public_id } = uploadResponse;
+
     if (!uploadResponse) {
         return next(new appError("File upload failed", 500));
     }
-    req.body.image = uploadResponse
 
-    const category = await SubCategory.create({
-        subCategoryName: req.body.subCategoryName,  // Use the extracted categoryName directly  
-            // slug: req.body.subCategoryName, // Use the slug created from categoryName  
+    const { secure_url, public_id } = uploadResponse;
+
+    // Validate secure_url and public_id  
+    if (!secure_url || !public_id) {
+        return next(new appError("Image upload failed, no URL or public ID", 500));
+    }
+
+    // Check if category already exists  
+    const existingSubCategory = await SubCategory.findOne({ subCategoryName });
+    if (existingSubCategory) {
+        return next(new appError("Category already exists", 400));
+    }
+
+    // Create new category  
+    const subCategory = new SubCategory({
+        subCategoryName,
         image: { secure_url, public_id },
-        createdBy: req.user._id // Assigning the createdBy field  
+        createdBy: req.user._id
     });
-    res.status(201).json({ data: category });
+
+    const savedCategory = await subCategory.save();
+    res.status(201).json({ data: savedCategory });
 })
 
 // ? ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,13 +83,12 @@ export const adminGetSubCategory = adminGetSpecfic(SubCategory)
 
 export const updateSubCategories = catchError(async (req, res, next) => {
     const { id } = req.params;
-    req.body.slug = slugify(req.body.subCategoryName)
+    const { subCategoryName } = req.body;
+    // Find the existing sub category  
     const existingSubCategory = await SubCategory.findById(id);
     if (!existingSubCategory) {
         return next(new appError('Category not found', 404));
     }
-
-
     let imageData = existingSubCategory.image;
     if (req.file) {
         await cloudinary.uploader.destroy(imageData.public_id)
@@ -78,7 +100,7 @@ export const updateSubCategories = catchError(async (req, res, next) => {
             public_id: uploadResponse.public_id
         };
     }
-    // existingCategory.subCategoryName = subCategoryName ?? existingCategory.subCategoryName; // Update name if provided  
+    existingSubCategory.subCategoryName = subCategoryName ?? existingSubCategory.subCategoryName; // Update name if provided  
     existingSubCategory.image = imageData; // Update image   
     const updatedSubCategory = await existingSubCategory.save();
     res.status(200).json({

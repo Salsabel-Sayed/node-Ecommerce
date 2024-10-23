@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { getAllCategories, getSpecificCategory } from "./categories.controller.js";
-import subCategoryRouter from "../subCategories/subCategories.routes.js";
+
 import { verifyToken } from "../../middleWare/verifyToken.js";
+import subCategoryRouter from "../subCategories(user)/subCategories.routes.js";
 
 
 

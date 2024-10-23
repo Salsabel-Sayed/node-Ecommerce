@@ -11,7 +11,7 @@ adminCategoryRouter.post("/addCategories/", verifyToken, allowedTo('admin'), upl
 adminCategoryRouter.put("/updateCategories/:id", verifyToken, allowedTo('admin'), uploadFile(filteration.image).single("image") ,updateCategories)
 adminCategoryRouter.delete("/deleteCategories/:id", verifyToken, allowedTo('admin'), deleteCategories)
 adminCategoryRouter.get("/getSpecificCategory/:id", verifyToken, allowedTo('admin'), getCategories)
-adminCategoryRouter.get("/getAllCategories/:id", verifyToken, allowedTo('admin'), getAllCategories)
+adminCategoryRouter.get("/adminGetAllCategories/", verifyToken, allowedTo('admin'), getAllCategories)
 
 
 export default adminCategoryRouter

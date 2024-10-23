@@ -263,15 +263,12 @@ export const html = (code) => {
 </body>
 </html>`
 }
-
-
-
 export const sendEmail = async ({ to, cc, bcc, subject, html, attachments = [] } = {}) => {
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: "slsabilkamal99@gmail.com",
-      pass: "tpjvntgrywdyoopf"
+      pass: "jdrvtzwyexabaehe"
     }
   })
   let info = await transporter.sendMail({

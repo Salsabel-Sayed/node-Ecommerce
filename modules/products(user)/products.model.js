@@ -1,5 +1,7 @@
 import { model, Schema, Types } from "mongoose";
 import slugify from "slugify";
+import { Reviews } from './../../modules(admin)/reviews/reviews.model.js';
+
 
 
 const productSchema = new Schema({
@@ -43,8 +45,9 @@ subCategoryIdRef:{
 },
 rateCount:Number,
 rateAvg:Number,
-stoke:Number,
-sold:Number
+stock:Number,
+sold:Number,
+
 
 
 },{toJSON: { virtuals: true }})

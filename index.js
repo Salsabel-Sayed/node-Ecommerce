@@ -5,16 +5,16 @@ import express from 'express';
 import {dbConnect} from "./dataBase/dbConnection.js"
 import {appError} from "./middleWare/errorHandling/appError.js"
 import { globalError } from './middleWare/errorHandling/globalError.js';
-import { bootstrap } from './modules/bootstrap.js';
+import { bootstrap } from './bootstrap.js';
 import cors from "cors"
 import { catchError } from './middleWare/errorHandling/catchError.js';
 import Stripe from 'stripe';
 const stripe = new Stripe('sk_test_51Pl5iHEYCGyae2RjXyrJgvfmVMud1o8GOmoE7UwfODvc0SzwTPWMpZ4Q5Lmh9Xj35jMItglZB0SWcLmPDiXvsuJ000VviDAMoQ');
 
 import dotenv from "dotenv"
-import { Orders } from './modules/order/order.model.js';
-import { User } from './modules/users/users.model.js';
-import { Cart } from './modules/cart/cart.model.js';
+import { Orders } from './modules(admin)/order/order.model.js';
+import { User } from './modules(admin)/users(admin)/users.model.js';
+import { Cart } from './modules(admin)/cart/cart.model.js';
 import { Product } from './modules/products(user)/products.model.js';
 dotenv.config()
 

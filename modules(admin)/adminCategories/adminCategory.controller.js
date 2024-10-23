@@ -69,8 +69,6 @@ export const updateCategories = catchError(async (req, res, next) => {
     if (!existingCategory) {
         return next(new appError('Category not found', 404));
     }
-
-     
     let imageData = existingCategory.image;  
     if (req.file) {await cloudinary.uploader.destroy(imageData.public_id) 
         const uploadResponse = await cloudinary.uploader.upload(req.file.path, {

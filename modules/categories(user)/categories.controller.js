@@ -2,12 +2,9 @@
 import { Category } from "./categories.model.js"
 import { appError } from "../../middleWare/errorHandling/appError.js"
 import { catchError } from "../../middleWare/errorHandling/catchError.js"
-import { getSpecfic } from "../handler/handler.js"
 import { ApiFeatures } from "../../utils/apiFeatures.js"
-// import {fileURLToPath} from "url"
+import { userGetSpecfic } from "../handler/handler(user).js"
 
-// import fs from "fs"
-// import cloudinary from "../../utils/cloudinary.js"
 
 
 
@@ -24,5 +21,5 @@ export const getAllCategories = catchError(async(req,res,next)=>{
 // ? ////////////////////////////////////////////////////////////////////////////////////////////////
 // * get Specfic category
 
-export const getSpecificCategory = getSpecfic(Category)
+export const getSpecificCategory = userGetSpecfic(Category)
 

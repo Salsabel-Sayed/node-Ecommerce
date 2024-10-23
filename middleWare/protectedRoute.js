@@ -1,4 +1,5 @@
-import { User } from "../modules/users/users.model.js"
+
+import { User } from "../modules(admin)/users(admin)/users.model.js";
 import { appError } from "./errorHandling/appError.js"
 import { catchError } from "./errorHandling/catchError.js"
 import  jwt  from 'jsonwebtoken';

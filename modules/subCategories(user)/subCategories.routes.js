@@ -1,6 +1,8 @@
 import { Router } from "express";
-import {getAllSubCategories, getSubCategories} from "./subCategories.controller.js";
+
 import { verifyToken } from "../../middleWare/verifyToken.js";
+import { allowedTo } from "../../middleWare/validations/allowRoles.js";
+import { getAllSubCategories, getSubCategories } from './subCategories.controller.js';
 
 
 
@@ -8,14 +10,7 @@ import { verifyToken } from "../../middleWare/verifyToken.js";
 
 
 const subCategoryRouter = Router({mergeParams:true})
-
-// subCategoryRouter.route('/')
-// .post(addSubCategory)
-// .get(getAllSubCategories)
-
-subCategoryRouter.use(verifyToken)
-
-
+subCategoryRouter.use(verifyToken,allowedTo('user'))
 subCategoryRouter.get("/getAllSubCategories/",getAllSubCategories)
 subCategoryRouter.get("/getSubCategories/:id",getSubCategories)
 
